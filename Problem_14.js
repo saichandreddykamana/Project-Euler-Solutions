@@ -16,3 +16,35 @@ Which starting number, under the given limit, produces the longest chain?
 Note: Once the chain starts the terms are allowed to go above limit.
 */
 
+function longestCollatzSequence(limit) {
+    let num = 1, steps = 1, result = 1, prevNums = {};
+    prevNums[num] = steps;
+    while(num <= limit){
+      let collatzResult = collatz(num, 1, prevNums);
+      if(!prevNums.hasOwnProperty(num)) prevNums[num] = collatzResult;
+      if(collatzResult > steps){
+        steps = collatzResult;
+        result = num;
+      }
+      num++;
+    }
+    return result;
+}
+  
+function collatz(num, steps, prevNums){
+    if(prevNums.hasOwnProperty(num)) {
+      return steps + prevNums[num]-1;
+    }
+    if(num <= 1){
+      return steps;
+    }else{
+      if(num % 2 === 0){
+        return collatz(num/2, steps + 1, prevNums);
+      }
+      if(num % 2 !== 0){
+        return collatz(3*num + 1, steps + 1, prevNums);
+      }
+    }
+}
+  
+console.log(longestCollatzSequence(14));
